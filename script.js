@@ -1,85 +1,94 @@
-const character = document.querySelector('#hero');
-const block = document.querySelector('#blocks');
-const score = document.querySelector('#score');
-const highScore = document.querySelector('#top-score');
+const character = document.getElementById("hero");
+const block = document.getElementById("blocks");
+const score = document.getElementById("score");
+const highScore = document.getElementById("top-score");
 
 let lost = true;
 
-const moveRight = () => {
+// Nouvelles fonctions simples pour bouger
+function goRight() {
   if (lost) {
     lost = false;
   }
-  let left = character.offsetLeft;
-  if (left != 220) {
-    left += 110;
-  }
-  character.style.left = left + 'px';
-};
+  const posH = character.offsetLeft;
+  if (posH < 220){
+     character.style.left = (posH + 110) + 'px';
+  } character.style.left = (posH + 110) + 'px';
+}
 
-const moveLeft = () => {
+function goLeft() {
   if (lost) {
     lost = false;
+  } 
+  const posH = character.offsetLeft;
+  if (posH > 0) {
+    character.style.left = (posH - 110) + 'px';
   }
-  let left = character.offsetLeft;
-  if (left != 0) {
-    left -= 110;
+}
+
+// Mise à jour du meilleur score
+function updateHighScore() {
+  const current = parseInt(score.innerText);
+  const best = parseInt(highScore.innerText);
+  if (current > best) {
+    localStorage.setItem('High Score', current);
+    highScore.innerText = current;
   }
-  character.style.left = left + 'px';
-};
+}
 
-const topScoreHandler = (score, topScore) => {
-  if (score > topScore) {
-    localStorage.setItem('High Score', score);
-    highScore.innerText = localStorage.getItem('High Score');
+
+window.addEventListener('keydown', Mouvement);
+// Fonction dédiée à gérer le clavier
+function Mouvement(e) {
+  switch (e.key) {
+    case 'ArrowRight':
+      goRight();
+      break;
+    case 'ArrowLeft':
+      goLeft();
+      break;
   }
-};
+}
 
-window.addEventListener('keydown', (e) => {
-  if (e.key == 'ArrowRight' || e.key == 'd') {
-    moveRight();
-  } else if (e.key == 'ArrowLeft' || e.key == 'a') {
-    moveLeft();
+
+// Changement de voie du bloc
+block.addEventListener('animationiteration', blockMouvement);
+function blockMouvement() { 
+  const lanes = [0, 110, 220];
+  block.style.left = lanes[Math.floor(Math.random() * lanes.length)] + 'px';
+  if (!lost){
+    score.innerText = (parseInt(score.innerText) + 1);
   }
-});
+}
 
-block.addEventListener('animationiteration', () => {
-  let rand = Math.floor(Math.random() * 3); // 0 1 2
-  block.style.left = rand * 110 + 'px';
 
-  if (!lost) {
-    score.innerText = parseInt(score.innerText) + 1;
+/*block.addEventListener('animationiteration', () => {
+  const lanes = [0, 110, 220];
+  block.style.left = lanes[Math.floor(Math.random() * lanes.length)] + 'px';
+  if (!lost){
+    score.innerText = (parseInt(score.innerText) + 1);
   }
-});
+});*/
 
-setInterval(() => {
-  let characterLeftPos = parseInt(
-    window.getComputedStyle(character).getPropertyValue('left')
-  );
-  let blockLeftPos = parseInt(
-    window.getComputedStyle(block).getPropertyValue('left')
-  );
+// Vérification collision
+setInterval(function() {
+  if (lost) return;
+  let heroPosition = parseInt(window.getComputedStyle(character).getPropertyValue('left'));
+  let blockPosition =parseInt(window.getComputedStyle(block).getPropertyValue('left'));
+  let blockTop =parseInt(window.getComputedStyle(block).getPropertyValue('top'));
 
-  let blockTopPos = parseInt(
-    window.getComputedStyle(block).getPropertyValue('top')
-  );
-
-  if (
-    characterLeftPos == blockLeftPos &&
-    blockTopPos > 420 &&
-    blockTopPos < 530
-  ) {
-    character.style.left = 110 + 'px';
+  // Zone de collision 
+  if (heroPosition === blockPosition && blockTop > 420 && blockTop < 530) {
     lost = true;
-    topScoreHandler(parseInt(score.innerText), parseInt(highScore.innerText));
-    score.innerText = 0;
+    updateHighScore();
+    score.innerText = '0';
+    character.style.left = '110px'; // reset au centre
   }
-});
+}, 50);
 
+// Chargement initial du high score
 window.addEventListener('load', () => {
-  if (localStorage.getItem('High Score')) {
-    highScore.innerText = localStorage.getItem('High Score');
-  } else {
-    localStorage.setItem('High Score', 0);
-    highScore.innerText = localStorage.getItem('High Score');
-  }
+  const saved = localStorage.getItem('High Score');
+  if (!saved) localStorage.setItem('High Score', '0');
+  highScore.innerText = localStorage.getItem('High Score');
 });
