@@ -1,8 +1,6 @@
 # Projet_web
 https://luka-hash-go.github.io/Projet_web/
 
-# test
-# blabla
 #ce qui reste à faire
 - rajouter ecran fin de jeu quand perdu
 - ajouter score qui augmente en fonction du temps
