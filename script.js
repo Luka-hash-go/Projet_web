@@ -62,13 +62,6 @@ function blockMouvement() {
 }
 
 
-/*block.addEventListener('animationiteration', () => {
-  const lanes = [0, 110, 220];
-  block.style.left = lanes[Math.floor(Math.random() * lanes.length)] + 'px';
-  if (!lost){
-    score.innerText = (parseInt(score.innerText) + 1);
-  }
-});*/
 
 // Vérification collision
 setInterval(function() {
