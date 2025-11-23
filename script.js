@@ -6,13 +6,13 @@ const highScore = document.getElementById("top-score");
 let lost = true;
 
 // Nouvelles fonctions simples pour bouger
-function goRight() {
+function GoRight() {
   if (lost) {
     lost = false;
   }
   const posH = character.offsetLeft;
   if (posH < 220){
-     character.style.left = (posH + 110) + 'px';
+    character.style.left = (posH + 110) + 'px';
   } character.style.left = (posH + 110) + 'px';
 }
 
@@ -42,7 +42,7 @@ window.addEventListener('keydown', Mouvement);
 function Mouvement(e) {
   switch (e.key) {
     case 'ArrowRight':
-      goRight();
+      GoRight();
       break;
     case 'ArrowLeft':
       goLeft();
