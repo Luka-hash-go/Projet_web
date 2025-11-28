@@ -1,85 +1,126 @@
-const character = document.querySelector('#hero');
-const block = document.querySelector('#blocks');
-const score = document.querySelector('#score');
-const highScore = document.querySelector('#top-score');
+const character = document.getElementById("hero");
+const block = document.getElementById("blocks");
+const block2 = document.getElementById("blocks2");
+const score = document.getElementById("score");
+const highScore = document.getElementById("top-score");
 
 let lost = true;
 
-const moveRight = () => {
+// Nouvelles fonctions simples pour bouger
+function GoRight() {
   if (lost) {
     lost = false;
   }
-  let left = character.offsetLeft;
-  if (left != 220) {
-    left += 110;
-  }
-  character.style.left = left + 'px';
-};
 
-const moveLeft = () => {
+  const posH = character.offsetLeft;
+  if (posH < 220){
+    character.style.left = (posH + 110) + 'px';
+  }
+}
+
+function GoLeft() {
   if (lost) {
     lost = false;
+  } 
+  const posH = character.offsetLeft;
+  if (posH > 0) {
+    character.style.left = (posH - 110) + 'px';
   }
-  let left = character.offsetLeft;
-  if (left != 0) {
-    left -= 110;
+}
+
+// Mise à jour du meilleur score
+function UpdateHighScore() {
+  const current = parseInt(score.innerText);
+  const best = parseInt(highScore.innerText);
+  if (current > best) {
+    localStorage.setItem('High Score', current);
+    highScore.innerText = current;
   }
-  character.style.left = left + 'px';
-};
+}
 
-const topScoreHandler = (score, topScore) => {
-  if (score > topScore) {
-    localStorage.setItem('High Score', score);
-    highScore.innerText = localStorage.getItem('High Score');
+
+window.addEventListener("keydown", Mouvement);
+// Fonction dédiée à gérer le clavier
+function Mouvement(e) {
+  switch (e.key) {
+    case "ArrowRight":
+    case "d" :
+      GoRight();
+      break;
+
+    case "ArrowLeft":
+    case "q":
+      GoLeft();
+      break;
   }
-};
+}
 
-window.addEventListener('keydown', (e) => {
-  if (e.key == 'ArrowRight' || e.key == 'd') {
-    moveRight();
-  } else if (e.key == 'ArrowLeft' || e.key == 'a') {
-    moveLeft();
+
+// Changement de voie du block
+block.addEventListener('animationiteration', BlockMouvement);
+
+function BlockMouvement() { 
+  //On trouve la ligne et on mets le block sur la ligne
+  const lanes = [0, 110, 220];
+  const lanesblock = lanes[Math.floor(Math.random() * lanes.length)]
+  block.style.left = lanesblock + 'px';
+
+  //On mets 50% du temps block2 et si ligne diff alors apparition block2
+  const apparition = Math.random();
+  if (apparition>0.5) {
+    block2.style.left = -110 + 'px';
   }
-});
-
-block.addEventListener('animationiteration', () => {
-  let rand = Math.floor(Math.random() * 3); // 0 1 2
-  block.style.left = rand * 110 + 'px';
-
-  if (!lost) {
-    score.innerText = parseInt(score.innerText) + 1;
+  if (apparition<0.5) {
+    const lanesblock2 = lanes[Math.floor(Math.random() * lanes.length)]
+    if (lanesblock2!=lanesblock) {
+      block2.style.left = lanesblock2 + 'px';
+    }
+    
   }
-});
+  if (!lost){
+    score.innerText = (parseInt(score.innerText) + 1);
+  }
+}
 
-setInterval(() => {
-  let characterLeftPos = parseInt(
-    window.getComputedStyle(character).getPropertyValue('left')
-  );
-  let blockLeftPos = parseInt(
-    window.getComputedStyle(block).getPropertyValue('left')
-  );
 
-  let blockTopPos = parseInt(
-    window.getComputedStyle(block).getPropertyValue('top')
-  );
 
-  if (
-    characterLeftPos == blockLeftPos &&
-    blockTopPos > 420 &&
-    blockTopPos < 530
-  ) {
-    character.style.left = 110 + 'px';
+// Vérification collision
+setInterval(function() {
+  if (lost) return;
+  let heroPosition = parseInt(window.getComputedStyle(character).getPropertyValue('left'));
+  let blockPosition =parseInt(window.getComputedStyle(block).getPropertyValue('left'));
+  let blockTop =parseInt(window.getComputedStyle(block).getPropertyValue('top'));
+
+  //block2
+  let block2Position =parseInt(window.getComputedStyle(block2).getPropertyValue('left'));
+  let block2Top =parseInt(window.getComputedStyle(block2).getPropertyValue('top'));
+
+  // Zone de collision 
+  //block1
+  if (heroPosition === blockPosition && blockTop > 300 && blockTop < 530) {
     lost = true;
-    topScoreHandler(parseInt(score.innerText), parseInt(highScore.innerText));
-    score.innerText = 0;
+    UpdateHighScore();
+    score.innerText = '0';
+    character.style.left = '110px'; // reset au centre
   }
-});
 
-window.addEventListener('load', () => {
-  if (localStorage.getItem('High Score')) {
-    highScore.innerText = localStorage.getItem('High Score');
-  } else {
-    localStorage.setItem('High Score', 0);
-    highScore.innerText = localStorage.getItem('High Score');
+  //block2
+  if (heroPosition === block2Position && block2Top > 350 && blockTop < 530) {
+    lost = true;
+    UpdateHighScore();
+    score.innerText = '0';
+    character.style.left = '110px'; // reset au centre
   }
-});
+}, 50);
+
+
+
+
+// Chargement initial du high score
+window.addEventListener('load', InitHS);
+
+function InitHS() {
+  const saved = localStorage.getItem('High Score');
+  if (!saved) localStorage.setItem('High Score', '0');
+  highScore.innerText = localStorage.getItem('High Score');
+}
