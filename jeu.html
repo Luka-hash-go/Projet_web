@@ -1,21 +1,58 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Projet-webs</title>
-    <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
-    <link rel="stylesheet" href="style_jeu.css" />
-  </head>
-  <body>
-    <h1>Score: <span id="score">0</span></h1>
-    <h2>High Score: <span id="top-score"></span></h2>
-    <a href="index.html"><button>Ecran d'acceuil</button></a>
-    <a href="classement.html"><button>Classement</button></a>
-    <div id="game">
-      <div id="blocks"></div>
-      <div id="blocks2"></div>
-      <div id="hero"></div>
-    </div>
-  </body>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wii Style Intro + Menu</title>
+<link rel="stylesheet" href="style_intro.css">
+</head>
+<body>
 
-  <script src="script.js"></script>
+<!-- ======================= MENU ======================= -->
+<div id="mainMenu">
+  <h1>LE JEU</h1>
+
+  <div class="menu-buttons">
+
+    <!-- FACILE -->
+    <div class="menu-btn" onclick="window.location.href='jeu_facile.html'">
+      <img src="bg-jeu.png" class="bg" alt="fond jeu">
+      <span>Facile</span>
+    </div>
+
+    <!-- DIFFICILE -->
+    <div class="menu-btn" onclick="window.location.href='jeu_difficile.html'">
+      <img src="bg-classement.png" class="bg" alt="fond classement">
+      <span>Difficile</span>
+    </div>
+
+    <!-- 1v1 -->
+    <div class="menu-btn" onclick="window.location.href='jeu_1v1.html'">
+      <img src="bg-classement.png" class="bg" alt="fond classement">
+      <span>1v1</span>
+    </div>
+
+  </div>
+</div>
+
+<script>
+window.onload = () => {
+  const whoosh = document.getElementById('whoosh');
+  const blip = document.getElementById('blip');
+
+  setTimeout(() => {
+    whoosh.play().catch(()=>{});
+  }, 250);
+
+  setTimeout(() => {
+    blip.play().catch(()=>{});
+  }, 1500);
+
+  setTimeout(() => {
+    document.getElementById("mainMenu").style.display = "flex";
+  }, 4100);
+};
+</script>
+
+</body>
 </html>
