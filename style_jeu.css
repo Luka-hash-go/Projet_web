@@ -23,7 +23,7 @@ h2 {
 }
 
 #game {
-  width: 330px;
+  width: 550px;
   height: 530px;
   border-radius: 3px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -62,9 +62,40 @@ h2 {
   animation: 1.5s movement infinite linear;
 }
 
+#blocks3 {
+  background-color: blue;
+  width: 110px;
+  height: 220px;
+  border-radius: 15px;
+  position: absolute;
+  animation: 1.5s movement infinite linear;
+}
+
+#blocks4 {
+  background-color: red;
+  width: 110px;
+  height: 110px;
+  border-radius: 15px;
+  position: absolute;
+  animation: 1.5s movement2 infinite linear;
+}
 @keyframes movement {
   0% {
     top: -110px;
+  }
+
+  100% {
+    top: 530px;
+  }
+}
+
+@keyframes movement2 {
+  0% {
+    top: -110px;
+  }
+
+  50% {
+    top: 530px;
   }
 
   100% {
