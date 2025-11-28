@@ -18,6 +18,9 @@ function GoRight() {
   if (posH < 440){
     character.style.left = (posH + 110) + 'px';
   }
+  if (posH==440){ 
+    character.style.left = (0) + 'px';
+  } 
 }
 
 function GoLeft() {
@@ -28,6 +31,9 @@ function GoLeft() {
   if (posH > 0) {
     character.style.left = (posH - 110) + 'px';
   }
+  if (posH==0){
+    character.style.left = (440) + 'px';
+  } 
 }
 
 // Mise à jour du meilleur score
