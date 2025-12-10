@@ -1,10 +1,13 @@
 const character = document.getElementById("hero");
 const block = document.getElementById("blocks");
 const block2 = document.getElementById("blocks2");
-const score = document.getElementById("score");
 const highScore = document.getElementById("top-score");
 
+
+const TIMER = document.getElementById("safeTimerDisplay");
+
 let lost = true;
+let seconds = 0;
 
 // Nouvelles fonctions simples pour bouger
 function GoRight() {
@@ -28,15 +31,31 @@ function GoLeft() {
   }
 }
 
+
+
 // Mise à jour du meilleur score
 function UpdateHighScore() {
-  const current = parseInt(score.innerText);
-  const best = parseInt(highScore.innerText);
-  if (current > best) {
-    localStorage.setItem('High Score', current);
-    highScore.innerText = current;
-  }
+  const current = parseInt(TIMER.innerText);
+  
+  // Récupérer la liste des scores
+  let scores = JSON.parse(localStorage.getItem('Scores Easy')) || [];
+  
+  // Ajouter le nouveau score
+  scores.push(current);
+  
+  // Trier du plus grand au plus petit
+  scores.sort((a, b) => b - a);
+  
+  // Garder seulement le top 5
+  scores = scores.slice(0, 5);
+  
+  // Sauvegarder
+  localStorage.setItem('Scores Easy', JSON.stringify(scores));
+  
+  // Mettre à jour l'affichage du meilleur score actuel
+  highScore.innerText = scores[0];
 }
+
 
 
 window.addEventListener("keydown", Mouvement);
@@ -77,9 +96,7 @@ function BlockMouvement() {
     }
     
   }
-  if (!lost){
-    score.innerText = (parseInt(score.innerText) + 1);
-  }
+
 }
 
 
@@ -100,7 +117,8 @@ setInterval(function() {
   if (heroPosition === blockPosition && blockTop > 300 && blockTop < 530) {
     lost = true;
     UpdateHighScore();
-    score.innerText = '0';
+    TIMER.innerText = '0';
+    seconds = 0;
     character.style.left = '110px'; // reset au centre
   }
 
@@ -108,7 +126,8 @@ setInterval(function() {
   if (heroPosition === block2Position && block2Top > 350 && blockTop < 530) {
     lost = true;
     UpdateHighScore();
-    score.innerText = '0';
+    TIMER.innerText = '0';
+    seconds = 0;
     character.style.left = '110px'; // reset au centre
   }
 }, 50);
@@ -119,8 +138,29 @@ setInterval(function() {
 // Chargement initial du high score
 window.addEventListener('load', InitHS);
 
-function InitHS() {
-  const saved = localStorage.getItem('High Score');
-  if (!saved) localStorage.setItem('High Score', '0');
-  highScore.innerText = localStorage.getItem('High Score');
+
+function timer() {
+  var timer = setInterval(
+    function() {
+    document.getElementById("safeTimerDisplay").innerHTML = seconds;
+    seconds++;
+    if (seconds < 0) {
+      clearInterval(timer);
+    }
+  }, 1000);
 }
+
+
+timer();
+
+function InitHS() {
+  const scores = JSON.parse(localStorage.getItem('Scores Easy')) || [];
+  if (scores.length === 0) {
+    highScore.innerText = '0';
+  } else {
+    highScore.innerText = scores[0];
+  }
+}
+
+
+// Mise à jour du meilleur score

@@ -1,15 +1,16 @@
 const character = document.getElementById("hero");
-const block = document.getElementById("blocks");
-const blocks2 = document.getElementById("blocks2");
-const blocks3 = document.getElementById("blocks3");
-const blocks4 = document.getElementById("blocks4");
+const block = document.getElementById("blocks12");
+const blocks2 = document.getElementById("blocks22");
+const blocks3 = document.getElementById("blocks32");
+const blocks4 = document.getElementById("blocks42");
 const highScore = document.getElementById("top-score");
 
 const TIMER = document.getElementById("safeTimerDisplay");
 
+
+
 let lost = true;
 let seconds = 0;
-
 // Nouvelles fonctions simples pour bouger
 function GoRight() {
   if (lost) {
@@ -17,10 +18,10 @@ function GoRight() {
   }
 
   const posH = character.offsetLeft;
-  if (posH < 440){
+  if (posH < 330){
     character.style.left = (posH + 110) + 'px';
   }
-  if (posH==440){ 
+  if (posH==330){ 
     character.style.left = (0) + 'px';
   } 
 }
@@ -34,32 +35,18 @@ function GoLeft() {
     character.style.left = (posH - 110) + 'px';
   }
   if (posH==0){
-    character.style.left = (440) + 'px';
+    character.style.left = (330) + 'px';
   } 
 }
-
 
 // Mise à jour du meilleur score
 function UpdateHighScore() {
   const current = parseInt(TIMER.innerText);
-  
-  // Récupérer la liste des scores
-  let scores = JSON.parse(localStorage.getItem('Scores Hard')) || [];
-  
-  // Ajouter le nouveau score
-  scores.push(current);
-  
-  // Trier du plus grand au plus petit
-  scores.sort((a, b) => b - a);
-  
-  // Garder seulement le top 5
-  scores = scores.slice(0, 5);
-  
-  // Sauvegarder
-  localStorage.setItem('Scores Hard', JSON.stringify(scores));
-  
-  // Mettre à jour l'affichage du meilleur score actuel
-  highScore.innerText = scores[0];
+  const best = parseInt(highScore.innerText);
+  if (current > best) {
+    localStorage.setItem('High Score', current);
+    highScore.innerText = current;
+  }
 }
 
 
@@ -85,7 +72,7 @@ block.addEventListener('animationiteration', BlockMouvement);
 
 function BlockMouvement() { 
   //On trouve la ligne et on mets le block sur la ligne
-  const lanes = [0, 110, 220,330,440];
+  const lanes = [0, 110, 220,330];
   const lanesblock = lanes[Math.floor(Math.random() * lanes.length)]
   const lanesblock2 = lanes[Math.floor(Math.random() * lanes.length)]
   const lanesblock3 = lanes[Math.floor(Math.random() * lanes.length)]
@@ -120,11 +107,13 @@ else {
     else {
     blocks4.style.left = -110 + 'px';
 }
+
 }
 
 //full gauche <=> full droite
 
 // Vérification collision
+
 setInterval(function() {
   if (lost) return;
   let heroPosition = parseInt(window.getComputedStyle(character).getPropertyValue('left'));
@@ -146,7 +135,7 @@ setInterval(function() {
 
   // Zone de collision 
   //block1
-  if (heroPosition === blockPosition && blockTop > 300 && blockTop < 530) {
+  if (heroPosition === blockPosition && blockTop > 420 && blockTop < 600) {
     lost = true;
     UpdateHighScore();
     TIMER.innerText = '0';
@@ -155,7 +144,7 @@ setInterval(function() {
   }
 
   //block2
-  if (heroPosition === block2Position && block2Top > 350 && block2Top < 530) {
+  if (heroPosition === block2Position && block2Top > 420 && block2Top < 600) {
     lost = true;
     UpdateHighScore();
     TIMER.innerText = '0';
@@ -163,7 +152,7 @@ setInterval(function() {
     character.style.left = '220px'; // reset au centre
   }
 
-  if (heroPosition === block3Position && block3Top > 200 && block3Top < 530) {
+  if (heroPosition === block3Position && block3Top > 370 && block3Top < 600) {
     lost = true;
     UpdateHighScore();
     TIMER.innerText = '0';
@@ -171,13 +160,15 @@ setInterval(function() {
     character.style.left = '220px'; // reset au centre
   }
 
-  if (heroPosition === block4Position && block4Top > 300 && block4Top < 530) {
+  if (heroPosition === block4Position && block4Top > 420 && block4Top < 600) {
     lost = true;
     UpdateHighScore();
     TIMER.innerText = '0';
     seconds = 0;
     character.style.left = '220px'; // reset au centre
   }
+
+  console.log("hero:", heroPosition, "computed:", parseInt(getComputedStyle(character).left));
 }, 50);
 
 
@@ -197,15 +188,12 @@ timer();
 
 
 
+
 // Chargement initial du high score
 window.addEventListener('load', InitHS);
 
-
 function InitHS() {
-  const scores = JSON.parse(localStorage.getItem('Scores Hard')) || [];
-  if (scores.length === 0) {
-    highScore.innerText = '0';
-  } else {
-    highScore.innerText = scores[0];
-  }
+  const saved = localStorage.getItem('High Score');
+  if (!saved) localStorage.setItem('High Score', '0');
+  highScore.innerText = localStorage.getItem('High Score');
 }
