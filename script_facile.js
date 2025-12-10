@@ -29,14 +29,39 @@ function GoLeft() {
 }
 
 // Mise à jour du meilleur score
-function UpdateHighScore() {
+/*function UpdateHighScore() {
   const current = parseInt(score.innerText);
   const best = parseInt(highScore.innerText);
   if (current > best) {
-    localStorage.setItem('High Score', current);
+    localStorage.setItem('High Score easy', current);
     highScore.innerText = current;
   }
+}*/
+
+
+// Mise à jour du meilleur score
+function UpdateHighScore() {
+  const current = parseInt(score.innerText);
+  
+  // Récupérer la liste des scores
+  let scores = JSON.parse(localStorage.getItem('Scores Easy')) || [];
+  
+  // Ajouter le nouveau score
+  scores.push(current);
+  
+  // Trier du plus grand au plus petit
+  scores.sort((a, b) => b - a);
+  
+  // Garder seulement le top 5
+  scores = scores.slice(0, 5);
+  
+  // Sauvegarder
+  localStorage.setItem('Scores Easy', JSON.stringify(scores));
+  
+  // Mettre à jour l'affichage du meilleur score actuel
+  highScore.innerText = scores[0];
 }
+
 
 
 window.addEventListener("keydown", Mouvement);
@@ -119,8 +144,20 @@ setInterval(function() {
 // Chargement initial du high score
 window.addEventListener('load', InitHS);
 
+/*function InitHS() {
+  const saved = localStorage.getItem('High Score easy');
+  if (!saved) localStorage.setItem('High Score easy', '0');
+  highScore.innerText = localStorage.getItem('High Score easy');
+}*/
+
 function InitHS() {
-  const saved = localStorage.getItem('High Score');
-  if (!saved) localStorage.setItem('High Score', '0');
-  highScore.innerText = localStorage.getItem('High Score');
+  const scores = JSON.parse(localStorage.getItem('Scores Easy')) || [];
+  if (scores.length === 0) {
+    highScore.innerText = '0';
+  } else {
+    highScore.innerText = scores[0];
+  }
 }
+
+
+// Mise à jour du meilleur score

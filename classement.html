@@ -20,124 +20,61 @@
 
   <section>
     <h2>Facile — Top 5</h2>
-    <ol id="board-easy"></ol>
+    <ul id="score-simple1"></ul>
+    <ul id="score-simple2"></ul>
+    <ul id="score-simple3"></ul>
+    <ul id="score-simple4"></ul>
+    <ul id="score-simple5"></ul>
   </section>
 
   <section>
     <h2>Difficile — Top 5</h2>
-    <ol id="board-hard"></ol>
+    <ul id="score-dur1"></ul>
+    <ul id="score-dur2"></ul>
+    <ul id="score-dur3"></ul>
+    <ul id="score-dur4"></ul>
+    <ul id="score-dur5"></ul>
+
   </section>
 
 <script>
-/*
-  Simple : affiche deux listes (top 5) pour les clés possibles stockant des scores.
-  On cherche d'abord 'leaderboard_easy' / 'leaderboard_hard' (tableaux d'objets {name,score,date} ou nombres),
-  puis quelques clés alternatives (scores_easy, highscore_easy...). Si rien trouvé, liste reste vide.
-*/
 
-const EASY_KEYS = ['leaderboard_easy','top-score-easy','high-score_easy','high-score-easy','top-score-easy'];
-const HARD_KEYS = ['leaderboard_hard','top-score-hard','high-score_hard','high-score-hard','top-score-hard'];
-const MAX = 5;
-
-function readKey(k){
-  try {
-    const raw = localStorage.getItem(k);
-    if (raw === null) return null;
-    // try JSON
-    try {
-      return JSON.parse(raw);
-    } catch(e){
-      // not JSON => return raw string/number
-      return raw;
-    }
-  } catch(e){
-    return null;
+  const easyScores = JSON.parse(localStorage.getItem('Scores Easy')) || [];
+  const easyList = document.getElementById('score-simple');
+  
+  if (easyScores.length > 0) {
+    document.getElementById('score-simple1').innerHTML = `<li> 1er : ${easyScores[0] || '0'}</li>`;
+    document.getElementById('score-simple2').innerHTML = `<li> 2ème : ${easyScores[1] || '0'}</li>`;
+    document.getElementById('score-simple3').innerHTML = `<li> 3ème : ${easyScores[2] || '0'}</li>`;
+    document.getElementById('score-simple4').innerHTML = `<li> 4ème : ${easyScores[3] || '0'}</li>`;
+    document.getElementById('score-simple5').innerHTML = `<li> 5ème : ${easyScores[4] || '0'}</li>`;
+  } else {
+    easyList.innerHTML = '<li class="empty">Aucun score</li>';
   }
-}
+  
 
-function findFirst(keys){
-  for (const k of keys){
-    const v = readKey(k);
-    if (v != null) return v;
-  }
-  return null;
-}
 
-function normalizeArray(data){
-  // data can be: array of numbers/strings/objects, a single number/string, or object
-  if (Array.isArray(data)){
-    return data.map(item => normalizeItem(item)).filter(x => x.score !== null);
-  }
-  // single value -> convert to array
-  if (typeof data === 'number' || typeof data === 'string') {
-    const n = Number(data);
-    if (!isNaN(n)) return [{ name: 'Joueur', score: n }];
-    return [];
-  }
-  if (typeof data === 'object' && data !== null){
-    // maybe an object with keys being entries => try to extract numeric values
-    // if object has score or name fields, treat as single entry
-    if ('score' in data || 'name' in data) return [normalizeItem(data)];
-    // else try to extract numeric values
-    const arr = [];
-    for (const v of Object.values(data)){
-      const n = Number(v);
-      if (!isNaN(n)) arr.push({ name: 'Joueur', score: n });
-    }
-    return arr;
-  }
-  return [];
-}
 
-function normalizeItem(item){
-  if (item == null) return { name: 'Joueur', score: null };
-  if (typeof item === 'number') return { name: 'Joueur', score: item };
-  if (typeof item === 'string'){
-    const n = Number(item);
-    if (!isNaN(n)) return { name: 'Joueur', score: n };
-    return { name: item.slice(0,20), score: 0 };
+  
+const hardScores = JSON.parse(localStorage.getItem('Scores Hard')) || [];
+const hardList = document.getElementById('score-dur');
+  
+  if (hardScores.length > 0) {
+    document.getElementById('score-dur1').innerHTML = `<li> 1er : ${hardScores[0] || '0'}</li>`;
+    document.getElementById('score-dur2').innerHTML = `<li> 2ème : ${hardScores[1] || '0'}</li>`;
+    document.getElementById('score-dur3').innerHTML = `<li> 3ème : ${hardScores[2] || '0'}</li>`;
+    document.getElementById('score-dur4').innerHTML = `<li> 4ème : ${hardScores[3] || '0'}</li>`;
+    document.getElementById('score-dur5').innerHTML = `<li> 5ème : ${hardScores[4] || '0'}</li>`;
+  } else {
+    easyList.innerHTML = '<li class="empty">Aucun score</li>';
   }
-  if (typeof item === 'object'){
-    const score = Number(item.score ?? item.points ?? item.value) ?? 0;
-    const name = (item.name || item.player || 'Joueur').toString().slice(0,20);
-    return { name, score };
-  }
-  return { name: 'Joueur', score: null };
-}
 
-function getTopFromKeys(keys){
-  const raw = findFirst(keys);
-  if (raw == null) return [];
-  const arr = normalizeArray(raw);
-  arr.sort((a,b) => (Number(b.score) || 0) - (Number(a.score) || 0));
-  return arr.slice(0, MAX);
-}
 
-function renderList(list, elId){
-  const el = document.getElementById(elId);
-  el.innerHTML = '';
-  if (!list || list.length === 0){
-    const li = document.createElement('li');
-    li.textContent = 'Aucun score enregistré.';
-    li.className = 'empty';
-    el.appendChild(li);
-    return;
-  }
-  list.forEach((it, idx) => {
-    const li = document.createElement('li');
-    li.textContent = `${idx+1}. ${it.name} — ${it.score} pts`;
-    el.appendChild(li);
-  });
-}
 
-function renderAll(){
-  const easyTop = getTopFromKeys(EASY_KEYS);
-  const hardTop = getTopFromKeys(HARD_KEYS);
-  renderList(easyTop, 'board-easy');
-  renderList(hardTop, 'board-hard');
-}
 
-window.addEventListener('load', renderAll);
+
+
+
 </script>
 </body>
 </html>
