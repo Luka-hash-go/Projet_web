@@ -37,6 +37,17 @@
 
   </section>
 
+
+  <section>
+    <h2>Extreme — Top 5</h2>
+    <ul id="score-ext1"></ul>
+    <ul id="score-ext2"></ul>
+    <ul id="score-ext3"></ul>
+    <ul id="score-ext4"></ul>
+    <ul id="score-ext5"></ul>
+
+  </section>
+
 <script>
 
   const easyScores = JSON.parse(localStorage.getItem('Scores Easy')) || [];
@@ -65,6 +76,20 @@ const hardList = document.getElementById('score-dur');
     document.getElementById('score-dur3').innerHTML = `<li> 3ème : ${hardScores[2] || '0'}</li>`;
     document.getElementById('score-dur4').innerHTML = `<li> 4ème : ${hardScores[3] || '0'}</li>`;
     document.getElementById('score-dur5').innerHTML = `<li> 5ème : ${hardScores[4] || '0'}</li>`;
+  } else {
+    easyList.innerHTML = '<li class="empty">Aucun score</li>';
+  }
+
+
+const extScores = JSON.parse(localStorage.getItem('Scores Ext')) || [];
+const extList = document.getElementById('score-ext');
+  
+  if (extScores.length > 0) {
+    document.getElementById('score-ext1').innerHTML = `<li> 1er : ${extScores[0] || '0'}</li>`;
+    document.getElementById('score-ext2').innerHTML = `<li> 2ème : ${extScores[1] || '0'}</li>`;
+    document.getElementById('score-ext3').innerHTML = `<li> 3ème : ${extScores[2] || '0'}</li>`;
+    document.getElementById('score-ext4').innerHTML = `<li> 4ème : ${extScores[3] || '0'}</li>`;
+    document.getElementById('score-ext5').innerHTML = `<li> 5ème : ${extScores[4] || '0'}</li>`;
   } else {
     easyList.innerHTML = '<li class="empty">Aucun score</li>';
   }
