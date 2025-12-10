@@ -6,7 +6,7 @@ https://luka-hash-go.github.io/Projet_web/
 - ajouter score qui augmente en fonction du temps FAIT
 - menu demarrage FAIT
 - bouton rejouer 
-- systeme classement Rajouter extreme
+- systeme classement Rajouter extreme Fait
 - rajouter fenêtre explication jeu
 
 # rapport
