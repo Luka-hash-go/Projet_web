@@ -13,8 +13,8 @@
   </style>
 </head>
 <body>
-  <a href="jeu.html"><button>Ecran d'acceuil</button></a>
-  <a href="index.html"><button>Jeu</button></a>
+  <a href="index.html"><button>Ecran d'acceuil</button></a>
+  <a href="jeu.html"><button>Jeu</button></a>
 
   <h1>Classement</h1>
 
@@ -48,10 +48,12 @@
 
   </section>
 
+
+
 <script>
 
   const easyScores = JSON.parse(localStorage.getItem('Scores Easy')) || [];
-  const easyList = document.getElementById('score-simple');
+  
   
   if (easyScores.length > 0) {
     document.getElementById('score-simple1').innerHTML = `<li> 1er : ${easyScores[0] || '0'}</li>`;
@@ -60,7 +62,7 @@
     document.getElementById('score-simple4').innerHTML = `<li> 4ème : ${easyScores[3] || '0'}</li>`;
     document.getElementById('score-simple5').innerHTML = `<li> 5ème : ${easyScores[4] || '0'}</li>`;
   } else {
-    easyList.innerHTML = '<li class="empty">Aucun score</li>';
+    document.getElementById('score-simple1').innerHTML = '<li class="empty">Aucun score</li>';
   }
   
 
@@ -68,7 +70,6 @@
 
   
 const hardScores = JSON.parse(localStorage.getItem('Scores Hard')) || [];
-const hardList = document.getElementById('score-dur');
   
   if (hardScores.length > 0) {
     document.getElementById('score-dur1').innerHTML = `<li> 1er : ${hardScores[0] || '0'}</li>`;
@@ -77,12 +78,12 @@ const hardList = document.getElementById('score-dur');
     document.getElementById('score-dur4').innerHTML = `<li> 4ème : ${hardScores[3] || '0'}</li>`;
     document.getElementById('score-dur5').innerHTML = `<li> 5ème : ${hardScores[4] || '0'}</li>`;
   } else {
-    easyList.innerHTML = '<li class="empty">Aucun score</li>';
+    document.getElementById('score-dur1').innerHTML = '<li class="empty">Aucun score</li>';  
   }
 
 
+
 const extScores = JSON.parse(localStorage.getItem('Scores Ext')) || [];
-const extList = document.getElementById('score-ext');
   
   if (extScores.length > 0) {
     document.getElementById('score-ext1').innerHTML = `<li> 1er : ${extScores[0] || '0'}</li>`;
@@ -91,7 +92,8 @@ const extList = document.getElementById('score-ext');
     document.getElementById('score-ext4').innerHTML = `<li> 4ème : ${extScores[3] || '0'}</li>`;
     document.getElementById('score-ext5').innerHTML = `<li> 5ème : ${extScores[4] || '0'}</li>`;
   } else {
-    easyList.innerHTML = '<li class="empty">Aucun score</li>';
+    document.getElementById('score-ext1').innerHTML = '<li class="empty">Aucun score</li>';
+    
   }
 
 
