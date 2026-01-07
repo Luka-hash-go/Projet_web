@@ -9,6 +9,12 @@ const TIMER = document.getElementById("safeTimerDisplay");
 let lost = true;
 let seconds = 0;
 
+let gameOverShown = false;
+let isGameOver = false;
+
+let collisionIntervalId = null;
+let timerIntervalId = null;
+
 // Nouvelles fonctions simples pour bouger
 function GoRight() {
   if (lost) {
@@ -61,6 +67,7 @@ function UpdateHighScore() {
 window.addEventListener("keydown", Mouvement);
 // Fonction dédiée à gérer le clavier
 function Mouvement(e) {
+  if (isGameOver) return;
   switch (e.key) {
     case "ArrowRight":
     case "d" :
@@ -102,8 +109,8 @@ function BlockMouvement() {
 
 
 // Vérification collision
-setInterval(function() {
-  if (lost) return;
+collisionIntervalId = setInterval(function() {
+  if (lost || isGameOver) return;
   let heroPosition = parseInt(window.getComputedStyle(character).getPropertyValue('left'));
   let blockPosition =parseInt(window.getComputedStyle(block).getPropertyValue('left'));
   let blockTop =parseInt(window.getComputedStyle(block).getPropertyValue('top'));
@@ -120,6 +127,7 @@ setInterval(function() {
     TIMER.innerText = '0';
     seconds = 0;
     character.style.left = '110px'; // reset au centre
+    DeclencherGameOver(seconds);
   }
 
   //block2
@@ -129,6 +137,7 @@ setInterval(function() {
     TIMER.innerText = '0';
     seconds = 0;
     character.style.left = '110px'; // reset au centre
+    DeclencherGameOver(seconds);
   }
 }, 50);
 
@@ -140,13 +149,11 @@ window.addEventListener('load', InitHS);
 
 
 function timer() {
-  var timer = setInterval(
-    function() {
+  if (timerIntervalId) return;
+  timerIntervalId = setInterval(function() {
+    if (isGameOver) return;
     document.getElementById("safeTimerDisplay").innerHTML = seconds;
     seconds++;
-    if (seconds < 0) {
-      clearInterval(timer);
-    }
   }, 1000);
 }
 
@@ -160,6 +167,65 @@ function InitHS() {
   } else {
     highScore.innerText = scores[0];
   }
+}
+
+function AssurerPopupDefaite() {
+  if (document.getElementById("death-overlay")) return;
+
+  const overlay = document.createElement("div");
+  overlay.id = "death-overlay";
+
+  const modal = document.createElement("div");
+  modal.className = "death-modal";
+
+  modal.innerHTML = `
+    <h2 class="death-title">Vous avez perdu</h2>
+    <button id="btn-replay" class="button-23" type="button">Rejouer</button>
+  `;
+
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+
+  document.getElementById("btn-replay").addEventListener("click", () => {
+    location.reload();
+  });
+}
+
+function AfficherPopupDefaite() {
+  AssurerPopupDefaite();
+  const overlay = document.getElementById("death-overlay");
+  if (overlay) overlay.classList.add("is-visible");
+}
+
+function MettreEnPauseAnimations() {
+  [block, block2].forEach((el) => {
+    if (!el) return;
+    el.style.animationPlayState = 'paused';
+  });
+}
+
+function FinDePartie(finalScore) {
+  if (gameOverShown) return;
+  gameOverShown = true;
+  isGameOver = true;
+  lost = true;
+
+  if (collisionIntervalId) {
+    clearInterval(collisionIntervalId);
+    collisionIntervalId = null;
+  }
+  if (timerIntervalId) {
+    clearInterval(timerIntervalId);
+    timerIntervalId = null;
+  }
+
+  MettreEnPauseAnimations();
+  UpdateHighScore(Number(finalScore) || 0);
+  AfficherPopupDefaite();
+}
+
+function DeclencherGameOver(score) {
+  FinDePartie(score);
 }
 
 

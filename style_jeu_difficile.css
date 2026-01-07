@@ -11,6 +11,37 @@ body {
   background-size: cover;
 }
 
+/* Pop-up de défaite */
+#death-overlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 9999;
+}
+
+#death-overlay.is-visible {
+  display: flex;
+}
+
+.death-modal {
+  width: min(420px, 92vw);
+  background: #111;
+  color: #fff;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 18px 16px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.death-title {
+  margin: 0 0 10px;
+  color: #fff;
+}
+
 /* CSS */
 .button-23 {
   background-color: #FFFFFF;

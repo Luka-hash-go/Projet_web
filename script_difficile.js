@@ -10,6 +10,14 @@ const TIMER = document.getElementById("safeTimerDisplay");
 let lost = true;
 let seconds = 0;
 
+
+let gameOverShown = false;
+let isGameOver = false;
+
+// IMPORTANT: garder les IDs des intervals pour pouvoir les arrêter
+let collisionIntervalId = null;
+let timerIntervalId = null;
+
 // Nouvelles fonctions simples pour bouger
 function GoRight() {
   if (lost) {
@@ -40,7 +48,7 @@ function GoLeft() {
 
 
 // Mise à jour du meilleur score
-function UpdateHighScore() {
+function UpdateHighScore(scoreFinal) {
   const current = parseInt(TIMER.innerText);
   
   // Récupérer la liste des scores
@@ -66,6 +74,7 @@ function UpdateHighScore() {
 window.addEventListener("keydown", Mouvement);
 // Fonction dédiée à gérer le clavier
 function Mouvement(e) {
+  if (isGameOver) return;
   switch (e.key) {
     case "ArrowRight":
     case "d" :
@@ -125,8 +134,8 @@ else {
 //full gauche <=> full droite
 
 // Vérification collision
-setInterval(function() {
-  if (lost) return;
+collisionIntervalId = setInterval(function() {
+  if (lost || isGameOver) return;
   let heroPosition = parseInt(window.getComputedStyle(character).getPropertyValue('left'));
   let blockPosition =parseInt(window.getComputedStyle(block).getPropertyValue('left'));
   let blockTop =parseInt(window.getComputedStyle(block).getPropertyValue('top'));
@@ -152,23 +161,27 @@ setInterval(function() {
     TIMER.innerText = '0';
     seconds = 0;
     character.style.left = '220px'; // reset au centre
+    DeclencherGameOver();
   }
 
   //block2
   if (heroPosition === block2Position && block2Top > 350 && block2Top < 530) {
     lost = true;
     UpdateHighScore();
+    DeclencherGameOver(TIMER.innerText);
     TIMER.innerText = '0';
     seconds = 0;
     character.style.left = '220px'; // reset au centre
+  
   }
 
   if (heroPosition === block3Position && block3Top > 200 && block3Top < 530) {
     lost = true;
-    UpdateHighScore();
+     UpdateHighScore();
     TIMER.innerText = '0';
     seconds = 0;
     character.style.left = '220px'; // reset au centre
+      DeclencherGameOver();
   }
 
   if (heroPosition === block4Position && block4Top > 300 && block4Top < 530) {
@@ -177,18 +190,17 @@ setInterval(function() {
     TIMER.innerText = '0';
     seconds = 0;
     character.style.left = '220px'; // reset au centre
+    DeclencherGameOver();
   }
 }, 50);
 
 
 function timer() {
-  var timer = setInterval(
-    function() {
+  if (timerIntervalId) return;
+  timerIntervalId = setInterval(function() {
+    if (isGameOver) return;
     document.getElementById("safeTimerDisplay").innerHTML = seconds;
     seconds++;
-    if (seconds < 0) {
-      clearInterval(timer);
-    }
   }, 1000);
 }
 
@@ -208,4 +220,63 @@ function InitHS() {
   } else {
     highScore.innerText = scores[0];
   }
+}
+
+function AssurerPopupDefaite() {
+  if (document.getElementById("death-overlay")) return;
+
+  const overlay = document.createElement("div");
+  overlay.id = "death-overlay";
+
+  const modal = document.createElement("div");
+  modal.className = "death-modal";
+
+  modal.innerHTML = `
+    <h2 class="death-title">Vous avez perdu</h2>
+    <button id="btn-replay" class="button-23" type="button">Rejouer</button>
+  `;
+
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+
+  document.getElementById("btn-replay").addEventListener("click", () => {
+    location.reload();
+  });
+}
+
+function AfficherPopupDefaite(finalScore) {
+  AssurerPopupDefaite();
+  const overlay = document.getElementById("death-overlay");
+  if (overlay) overlay.classList.add("is-visible");
+}
+
+function MettreEnPauseAnimations() {
+  [block, blocks2, blocks3, blocks4].forEach((el) => {
+    if (!el) return;
+    el.style.animationPlayState = 'paused';
+  });
+}
+
+function FinDePartie(finalScore) {
+  if (gameOverShown) return;
+  gameOverShown = true;
+  isGameOver = true;
+  lost = true;
+
+  if (collisionIntervalId) {
+    clearInterval(collisionIntervalId);
+    collisionIntervalId = null;
+  }
+  if (timerIntervalId) {
+    clearInterval(timerIntervalId);
+    timerIntervalId = null;
+  }
+
+  MettreEnPauseAnimations();
+  UpdateHighScore(Number(finalScore) || 0);
+  AfficherPopupDefaite(Number(finalScore) || 0);
+}
+
+function DeclencherGameOver(score) {
+  FinDePartie(score);
 }
