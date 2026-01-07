@@ -11,7 +11,8 @@ body {
   background-size: cover;
 }
 
-/* Pop-up de défaite */
+/* Pop-up de défaite 
+pour la mort*/
 #death-overlay {
   position: fixed;
   inset: 0;
@@ -42,7 +43,6 @@ body {
   color: #fff;
 }
 
-/* CSS */
 .button-23 {
   background-color: #FFFFFF;
   border: 1px solid #222222;
