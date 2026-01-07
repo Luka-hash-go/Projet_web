@@ -175,6 +175,7 @@ h2 {
   border-radius: 15px;
   position: absolute;
   animation: 1.5s movement infinite linear;
+  /*probleme */
 }
 
 #blocks4 {
