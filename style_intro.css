@@ -201,10 +201,12 @@ body {
     text-shadow: 0 2px 6px rgba(0,0,0,0.5);
   }
   .logo {
-    position : relative;
-    top:-640px;
-    left: -890px;
+    position: fixed;
+    top: -70px;
+    left: 0;
     width: 150px;
-    height: auto; 
-    z-index: 10;
+    max-width: 25vw;
+    height: auto;
+    z-index: 1000;
+    display: block;
   }
