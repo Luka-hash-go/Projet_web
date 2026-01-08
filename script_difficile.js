@@ -161,7 +161,7 @@ collisionIntervalId = setInterval(function() {
     TIMER.innerText = '0';
     seconds = 0;
     character.style.left = '220px'; // reset au centre
-    DeclencherGameOver();
+    DeclencherGameOver(TIMER.innerText);
   }
 
   //block2
@@ -181,7 +181,7 @@ collisionIntervalId = setInterval(function() {
     TIMER.innerText = '0';
     seconds = 0;
     character.style.left = '220px'; // reset au centre
-      DeclencherGameOver();
+      DeclencherGameOver(TIMER.innerText);
   }
 
   if (heroPosition === block4Position && block4Top > 300 && block4Top < 530) {
@@ -190,7 +190,7 @@ collisionIntervalId = setInterval(function() {
     TIMER.innerText = '0';
     seconds = 0;
     character.style.left = '220px'; // reset au centre
-    DeclencherGameOver();
+    DeclencherGameOver(TIMER.innerText);
   }
 }, 50);
 

@@ -159,10 +159,10 @@ collisionIntervalId = setInterval(function() {
   if (heroPosition === blockPosition && blockTop > 420 && blockTop < 600) {
     lost = true;
     UpdateHighScore();
+    DeclencherGameOver(TIMER.innerText);
     TIMER.innerText = '0';
     seconds = 0;
     character.style.left = '220px'; // reset au centre
-    DeclencherGameOver();
   }
 
   //block2
