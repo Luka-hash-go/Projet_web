@@ -189,8 +189,12 @@ h2 {
   animation: 1.5s movement2 infinite linear;
 }
 
+#blocks, #blocks2, #blocks4, #hero {
+  background-position: center;
+}
 #blocks12 {
   background-image: url("./images/shadow.png");
+  background-position: center;
   background-color: rgb(175, 175, 175);
   background-size: cover;
   width: 110px;
@@ -232,6 +236,10 @@ h2 {
   border-radius: 15px;
   position: absolute;
   animation: 1.5s movement5 infinite linear;
+}
+
+#blocks12, #blocks22, #blocks42{
+  background-position: center;
 }
 
 @keyframes movement {
