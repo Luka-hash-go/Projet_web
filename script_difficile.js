@@ -33,7 +33,7 @@ function playSound(audioElement) {
 function GoRight() {
   if (lost) {
     lost = false;
-    playSound(sonMort);
+    
   }
 
   const posH = character.offsetLeft;
@@ -50,7 +50,7 @@ function GoRight() {
 function GoLeft() {
   if (lost) {
     lost = false;
-    playSound(sonMort);
+    
   } 
   const posH = character.offsetLeft;
   if (posH > 0) {
@@ -179,16 +179,16 @@ collisionIntervalId = setInterval(function() {
     TIMER.innerText = '0';
     seconds = 0;
     character.style.left = '220px'; // reset au centre
+    FinDePartie();
     playSound(sonMort);
-    DeclencherGameOver(TIMER.innerText);
   }
 
   //block2
   if (heroPosition === block2Position && block2Top > 350 && block2Top < 530) {
     lost = true;
     UpdateHighScore();
+    FinDePartie();
     playSound(sonMort);
-    DeclencherGameOver(TIMER.innerText);
     TIMER.innerText = '0';
     seconds = 0;
     character.style.left = '220px'; // reset au centre
@@ -201,8 +201,8 @@ collisionIntervalId = setInterval(function() {
     TIMER.innerText = '0';
     seconds = 0;
     character.style.left = '220px'; // reset au centre
+    FinDePartie();
     playSound(sonMort);
-      DeclencherGameOver(TIMER.innerText);
   }
 
   if (heroPosition === block4Position && block4Top > 300 && block4Top < 530) {
@@ -211,11 +211,12 @@ collisionIntervalId = setInterval(function() {
     TIMER.innerText = '0';
     seconds = 0;
     character.style.left = '220px'; // reset au centre
+    FinDePartie();
     playSound(sonMort);
-    DeclencherGameOver(TIMER.innerText);
+    
   }
 }, 50);
-
+// utilisation d'innerhtml comme vu dans le cours page 13 afin de varier et plus pratique avec la mort + timer
 
 function timer() {
   if (timerIntervalId) return;
@@ -265,8 +266,8 @@ function AssurerPopupDefaite() {
     location.reload();
   });
 }
-
-function AfficherPopupDefaite(finalScore) {
+// implementation du score afficher sur le popupdedefaite abandonner car inutile
+function AfficherPopupDefaite() {
   AssurerPopupDefaite();
   const overlay = document.getElementById("death-overlay");
   if (overlay) overlay.classList.add("is-visible");
@@ -279,7 +280,7 @@ function MettreEnPauseAnimations() {
   });
 }
 
-function FinDePartie(finalScore) {
+function FinDePartie() {
   if (gameOverShown) return;
   gameOverShown = true;
   isGameOver = true;
@@ -295,10 +296,6 @@ function FinDePartie(finalScore) {
   }
 
   MettreEnPauseAnimations();
-  UpdateHighScore(Number(finalScore) || 0);
-  AfficherPopupDefaite(Number(finalScore) || 0);
+  AfficherPopupDefaite();
 }
 
-function DeclencherGameOver(score) {
-  FinDePartie(score);
-}

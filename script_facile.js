@@ -29,7 +29,7 @@ function playSound(audioElement) {
 function GoRight() {
   if (lost) {
     lost = false;
-    playSound(sonMort);
+    
   }
 
   const posH = character.offsetLeft;
@@ -42,7 +42,7 @@ function GoRight() {
 function GoLeft() {
   if (lost) {
     lost = false;
-    playSound(sonMort);
+    
   } 
   const posH = character.offsetLeft;
   if (posH > 0) {
@@ -141,7 +141,8 @@ collisionIntervalId = setInterval(function() {
     TIMER.innerText = '0';
     seconds = 0;
     character.style.left = '110px'; // reset au centre
-    DeclencherGameOver(seconds);
+    FinDePartie()
+    playSound(sonMort);
   }
 
   //block2
@@ -151,7 +152,8 @@ collisionIntervalId = setInterval(function() {
     TIMER.innerText = '0';
     seconds = 0;
     character.style.left = '110px'; // reset au centre
-    DeclencherGameOver(seconds);
+    FinDePartie()
+    playSound(sonMort);
   }
 }, 50);
 
@@ -161,7 +163,7 @@ collisionIntervalId = setInterval(function() {
 // Chargement initial du high score
 window.addEventListener('load', InitHS);
 
-
+// utilisation d'innerhtml comme vu dans le cours page 13 afin de varier et plus pratique avec la mort + timer 
 function timer() {
   if (timerIntervalId) return;
   timerIntervalId = setInterval(function() {
@@ -204,7 +206,7 @@ function AssurerPopupDefaite() {
     location.reload();
   });
 }
-
+// implementation du score afficher sur le popupdedefaite abandonner car inutile
 function AfficherPopupDefaite() {
   AssurerPopupDefaite();
   const overlay = document.getElementById("death-overlay");
@@ -218,7 +220,7 @@ function MettreEnPauseAnimations() {
   });
 }
 
-function FinDePartie(finalScore) {
+function FinDePartie() {
   if (gameOverShown) return;
   gameOverShown = true;
   isGameOver = true;
@@ -234,13 +236,5 @@ function FinDePartie(finalScore) {
   }
 
   MettreEnPauseAnimations();
-  UpdateHighScore(Number(finalScore) || 0);
   AfficherPopupDefaite();
 }
-
-function DeclencherGameOver(score) {
-  FinDePartie(score);
-}
-
-
-// Mise à jour du meilleur score

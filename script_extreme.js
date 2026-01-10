@@ -32,7 +32,6 @@ function playSound(audioElement) {
 function GoRight() {
   if (lost) {
     lost = false;
-    playSound(sonMort);
   }
 
   const posH = character.offsetLeft;
@@ -49,7 +48,6 @@ function GoRight() {
 function GoLeft() {
   if (lost) {
     lost = false;
-    playSound(sonMort);
   } 
   const posH = character.offsetLeft;
   if (posH > 0) {
@@ -176,7 +174,8 @@ collisionIntervalId = setInterval(function() {
   if (heroPosition === blockPosition && blockTop > 420 && blockTop < 600) {
     lost = true;
     UpdateHighScore();
-    DeclencherGameOver(TIMER.innerText);
+    FinDePartie()   
+    playSound(sonMort);
     TIMER.innerText = '0';
     seconds = 0;
     character.style.left = '220px'; // reset au centre
@@ -186,7 +185,8 @@ collisionIntervalId = setInterval(function() {
   if (heroPosition === block2Position && block2Top > 420 && block2Top < 600) {
     lost = true;
     UpdateHighScore();
-    DeclencherGameOver(TIMER.innerText);
+    FinDePartie();
+    playSound(sonMort);
     TIMER.innerText = '0';
     seconds = 0;
     character.style.left = '220px'; // reset au centre
@@ -195,7 +195,8 @@ collisionIntervalId = setInterval(function() {
   if (heroPosition === block3Position && block3Top > 370 && block3Top < 600) {
     lost = true;
     UpdateHighScore();
-    DeclencherGameOver(TIMER.innerText);
+    FinDePartie();
+    playSound(sonMort);
     TIMER.innerText = '0';
     seconds = 0;
     character.style.left = '220px'; // reset au centre
@@ -204,7 +205,8 @@ collisionIntervalId = setInterval(function() {
   if (heroPosition === block4Position && block4Top > 420 && block4Top < 600) {
     lost = true;
     UpdateHighScore();
-    DeclencherGameOver(TIMER.innerText);
+    FinDePartie();
+    playSound(sonMort);
     TIMER.innerText = '0';
     seconds = 0;
     character.style.left = '220px'; // reset au centre
@@ -213,7 +215,7 @@ collisionIntervalId = setInterval(function() {
   console.log("hero:", heroPosition, "computed:", parseInt(getComputedStyle(character).left));
 }, 50);
 
-
+// utilisation d'innerhtml comme vu dans le cours page 13 afin de varier et plus pratique avec la mort + timer
 function timer() {
   if (timerIntervalId) return;
   timerIntervalId = setInterval(function() {
@@ -261,6 +263,7 @@ function AssurerPopupDefaite() {
   });
 }
 
+// implementation du score afficher sur le popupdedefaite abandonner car inutile
 function AfficherPopupDefaite() {
   AssurerPopupDefaite();
   const overlay = document.getElementById("death-overlay");
@@ -274,7 +277,7 @@ function MettreEnPauseAnimations() {
   });
 }
 
-function FinDePartie(finalScore) {
+function FinDePartie() {
   if (gameOverShown) return;
   gameOverShown = true;
   isGameOver = true;
@@ -290,10 +293,6 @@ function FinDePartie(finalScore) {
   }
 
   MettreEnPauseAnimations();
-  UpdateHighScore(Number(finalScore) || 0);
   AfficherPopupDefaite();
 }
 
-function DeclencherGameOver(score) {
-  FinDePartie(score);
-}
