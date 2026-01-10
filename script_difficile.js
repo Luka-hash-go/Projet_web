@@ -33,6 +33,7 @@ function playSound(audioElement) {
 function GoRight() {
   if (lost) {
     lost = false;
+    playSound(sonMort);
   }
 
   const posH = character.offsetLeft;
