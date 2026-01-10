@@ -9,6 +9,10 @@ const sonBouge = document.getElementById("sonBouge");
 
 const TIMER = document.getElementById("safeTimerDisplay");
 
+const themeJeu = document.getElementById("themeJeu");
+
+let themeEnCours = false;
+
 let lost = true;
 let seconds = 0;
 
@@ -23,6 +27,22 @@ function playSound(audioElement) {
   audioElement.play().catch(() => {
     // ignore si bloqué (sécurité navigateur)
   });
+}
+
+function lancerTheme() {
+  if (themeEnCours) return;
+
+  themeJeu.currentTime = 0;
+  themeJeu.play().catch(() => {
+    // bloqué tant que pas d'interaction utilisateur
+  });
+  themeEnCours = true;
+}
+
+function arreterTheme() {
+  themeJeu.pause();
+  themeJeu.currentTime = 0;
+  themeEnCours = false;
 }
 
 // Nouvelles fonctions simples pour bouger
@@ -222,6 +242,7 @@ function MettreEnPauseAnimations() {
 
 function FinDePartie() {
   if (gameOverShown) return;
+  arreterTheme();
   gameOverShown = true;
   isGameOver = true;
   lost = true;
@@ -238,3 +259,21 @@ function FinDePartie() {
   MettreEnPauseAnimations();
   AfficherPopupDefaite();
 }
+
+window.addEventListener("load", () => {
+  const demarrerAudio = () => {
+    if (!isGameOver && !themeEnCours) {
+      lancerTheme();
+    }
+
+    // Une seule fois
+    document.removeEventListener("keydown", demarrerAudio);
+    document.removeEventListener("mousedown", demarrerAudio);
+    document.removeEventListener("touchstart", demarrerAudio);
+  };
+
+  // Attente interaction utilisateur (règle navigateur)
+  document.addEventListener("keydown", demarrerAudio);
+  document.addEventListener("mousedown", demarrerAudio);
+  document.addEventListener("touchstart", demarrerAudio);
+});
