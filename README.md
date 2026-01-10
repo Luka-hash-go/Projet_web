@@ -4,7 +4,7 @@ https://luka-hash-go.github.io/Projet_web/
 # Travail effectué par :
  - Alexis CAJAL : CSS + HTML + SON (Style block + Son)
  - Clément BEDOUR : JS + HTML (Creation jeu)
- - Luka Boré : JS + CSS (Création jeu + Classment)
+ - Luka Boré : JS + CSS (Création jeu + Classement)
  - Pol BRIENT : CSS + HTML (Style block + Home menu)
  
 # Lien vers le site :
