@@ -3,6 +3,9 @@ const block = document.getElementById("blocks");
 const block2 = document.getElementById("blocks2");
 const highScore = document.getElementById("top-score");
 
+const sonMort = document.getElementById("sonMort");
+const sonBouge = document.getElementById("sonBouge");
+
 
 const TIMER = document.getElementById("safeTimerDisplay");
 
@@ -15,25 +18,36 @@ let isGameOver = false;
 let collisionIntervalId = null;
 let timerIntervalId = null;
 
+function playSound(audioElement) {
+  audioElement.currentTime = 0;
+  audioElement.play().catch(() => {
+    // ignore si bloqué (sécurité navigateur)
+  });
+}
+
 // Nouvelles fonctions simples pour bouger
 function GoRight() {
   if (lost) {
     lost = false;
+    playSound(sonMort);
   }
 
   const posH = character.offsetLeft;
   if (posH < 220){
     character.style.left = (posH + 110) + 'px';
+    playSound(sonBouge);
   }
 }
 
 function GoLeft() {
   if (lost) {
     lost = false;
+    playSound(sonMort);
   } 
   const posH = character.offsetLeft;
   if (posH > 0) {
     character.style.left = (posH - 110) + 'px';
+    playSound(sonBouge);
   }
 }
 

@@ -5,6 +5,9 @@ const blocks3 = document.getElementById("blocks3");
 const blocks4 = document.getElementById("blocks4");
 const highScore = document.getElementById("top-score");
 
+const sonMort = document.getElementById("sonMort");
+const sonBouge = document.getElementById("sonBouge");
+
 const TIMER = document.getElementById("safeTimerDisplay");
 
 let lost = true;
@@ -18,7 +21,15 @@ let isGameOver = false;
 let collisionIntervalId = null;
 let timerIntervalId = null;
 
-// Nouvelles fonctions simples pour bouger
+
+function playSound(audioElement) {
+  audioElement.currentTime = 0;
+  audioElement.play().catch(() => {
+    // ignore si bloqué (sécurité navigateur)
+  });
+}
+
+
 function GoRight() {
   if (lost) {
     lost = false;
@@ -27,23 +38,29 @@ function GoRight() {
   const posH = character.offsetLeft;
   if (posH < 440){
     character.style.left = (posH + 110) + 'px';
+    playSound(sonBouge);
   }
   if (posH==440){ 
     character.style.left = (0) + 'px';
-  } 
+    playSound(sonBouge);
+  }
 }
 
 function GoLeft() {
   if (lost) {
     lost = false;
+    playSound(sonMort);
   } 
   const posH = character.offsetLeft;
   if (posH > 0) {
     character.style.left = (posH - 110) + 'px';
+    playSound(sonBouge);
   }
   if (posH==0){
     character.style.left = (440) + 'px';
-  } 
+    playSound(sonBouge);
+  }
+  
 }
 
 
@@ -161,6 +178,7 @@ collisionIntervalId = setInterval(function() {
     TIMER.innerText = '0';
     seconds = 0;
     character.style.left = '220px'; // reset au centre
+    playSound(sonMort);
     DeclencherGameOver(TIMER.innerText);
   }
 
@@ -168,6 +186,7 @@ collisionIntervalId = setInterval(function() {
   if (heroPosition === block2Position && block2Top > 350 && block2Top < 530) {
     lost = true;
     UpdateHighScore();
+    playSound(sonMort);
     DeclencherGameOver(TIMER.innerText);
     TIMER.innerText = '0';
     seconds = 0;
@@ -181,6 +200,7 @@ collisionIntervalId = setInterval(function() {
     TIMER.innerText = '0';
     seconds = 0;
     character.style.left = '220px'; // reset au centre
+    playSound(sonMort);
       DeclencherGameOver(TIMER.innerText);
   }
 
@@ -190,6 +210,7 @@ collisionIntervalId = setInterval(function() {
     TIMER.innerText = '0';
     seconds = 0;
     character.style.left = '220px'; // reset au centre
+    playSound(sonMort);
     DeclencherGameOver(TIMER.innerText);
   }
 }, 50);
