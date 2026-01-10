@@ -103,6 +103,8 @@ body {
 .wii-loader {
   position: absolute;
   bottom: 90px;
+  left: 52%;
+  transform: translateX(-51%);
   display: flex;
   gap: 12px;
   opacity: 0;
